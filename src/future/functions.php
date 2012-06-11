@@ -1,4 +1,3 @@
-#!/usr/bin/env php
 <?php
 
 /*
@@ -17,18 +16,13 @@
  * limitations under the License.
  */
 
-$root = dirname(dirname(dirname(__FILE__)));
-require_once $root.'/scripts/__init_script__.php';
-
-// Simple test script for PhutilServiceProfiler.
-
-PhutilServiceProfiler::installEchoListener();
-
-execx('ls %s', '/tmp');
-
-exec_manual('sleep %s', 1);
-
-phutil_passthru('cat');
-
-echo "\n\nSERVICE CALL LOG\n";
-var_dump(PhutilServiceProfiler::getInstance()->getServiceCallLog());
+/**
+ * Convenience function for instantiating a new @{class:FutureIterator}.
+ *
+ * @param list              List of @{class:Future}s.
+ * @return FutureIterator   New @{class:FutureIterator} over those futures.
+ * @group futures
+ */
+function Futures($futures) {
+  return new FutureIterator($futures);
+}

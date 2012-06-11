@@ -1,4 +1,3 @@
-#!/usr/bin/env php
 <?php
 
 /*
@@ -17,18 +16,27 @@
  * limitations under the License.
  */
 
-$root = dirname(dirname(dirname(__FILE__)));
-require_once $root.'/scripts/__init_script__.php';
+/**
+ * @group testcase
+ */
+final class PhutilLanguageGuesserTestCase extends ArcanistPhutilTestCase {
 
-// Simple test script for PhutilServiceProfiler.
+  public function testGuessing() {
+    $dir = dirname(__FILE__).'/languageguesser/';
+    foreach (Filesystem::listDirectory($dir, $hidden = false) as $test) {
+      $source = Filesystem::readFile($dir.$test);
 
-PhutilServiceProfiler::installEchoListener();
+      if (strpos($test, '.') !== false) {
+        $expect = head(explode('.', $test));
+      } else {
+        $expect = null;
+      }
 
-execx('ls %s', '/tmp');
+      $this->assertEqual(
+        $expect,
+        PhutilLanguageGuesser::guessLanguage($source),
+        "Guessed language for '{$test}'.");
+    }
+  }
 
-exec_manual('sleep %s', 1);
-
-phutil_passthru('cat');
-
-echo "\n\nSERVICE CALL LOG\n";
-var_dump(PhutilServiceProfiler::getInstance()->getServiceCallLog());
+}
